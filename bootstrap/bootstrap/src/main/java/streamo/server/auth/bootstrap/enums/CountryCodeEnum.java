@@ -1,5 +1,5 @@
-package com.doctorappointment.experience.enums;
+package streamo.server.auth.bootstrap.enums;
 
 public enum CountryCodeEnum {
-    JO, EG, AE, UA;
+    IN, JO, EG, AE, UA, USA;
 }

@@ -1,5 +1,7 @@
 package streamo.server.auth.bootstrap.exceptions;
 
-public class AuthNotFoundException extends RuntimeException {
-
+public class UserNotFoundException extends RuntimeException {
+    public UserNotFoundException(){
+        super("Username not found for given request");
+    }
 }

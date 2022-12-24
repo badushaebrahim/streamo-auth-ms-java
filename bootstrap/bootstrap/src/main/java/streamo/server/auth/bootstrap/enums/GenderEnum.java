@@ -1,6 +1,6 @@
-package com.doctorappointment.experience.enums;
+package streamo.server.auth.bootstrap.enums;
 
 public enum GenderEnum {
-    FEMALE,MALE;
+    FEMALE, MALE, OTHERS;
 
 }

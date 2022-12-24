@@ -1,4 +1,4 @@
-package com.appointment.management.swagger;
+package streamo.server.auth.bootstrap.configurations;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -12,6 +12,7 @@ import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 @Configuration
