@@ -7,15 +7,9 @@ import org.springframework.stereotype.Service;
 import streamo.server.auth.bootstrap.exceptions.PasswordNotMatchingException;
 import streamo.server.auth.bootstrap.exceptions.UserNameAlreadyExistsException;
 import streamo.server.auth.bootstrap.exceptions.UserNotFoundException;
-import streamo.server.auth.bootstrap.model.command.DeleteUserCommand;
-import streamo.server.auth.bootstrap.model.command.SignInCommand;
-import streamo.server.auth.bootstrap.model.command.SignUpCommand;
-import streamo.server.auth.bootstrap.model.command.UpdateProfileCommand;
+import streamo.server.auth.bootstrap.model.command.*;
 import streamo.server.auth.bootstrap.model.entity.AuthEntity;
-import streamo.server.auth.bootstrap.model.response.DeleteUserResponse;
-import streamo.server.auth.bootstrap.model.response.SignInResponse;
-import streamo.server.auth.bootstrap.model.response.SignUpResponse;
-import streamo.server.auth.bootstrap.model.response.UpdateProfileResponse;
+import streamo.server.auth.bootstrap.model.response.*;
 import streamo.server.auth.bootstrap.repository.AuthRepository;
 import java.time.LocalDateTime;
 
@@ -72,10 +66,8 @@ public class AuthService {
                 String newUsername = StringUtils.isNotBlank(command.getUpdateProfileRequest().getNewUsername()) ? command.getUpdateProfileRequest().getNewUsername() : authEntity.getUserName();
                 if((authRepository.getByUserName(command.getUpdateProfileRequest().getNewUsername()) == null) || authEntity.getUserName().equals(newUsername)){
                     newAuthEntity.setUserName(newUsername);
-                    Integer newUserAge = StringUtils.isNotBlank(String.valueOf(command.getUpdateProfileRequest().getUserAge())) ? command.getUpdateProfileRequest().getUserAge() : authEntity.getUserAge();
-                    newAuthEntity.setUserAge(newUserAge);
-                    String newUserGender = StringUtils.isNotBlank(command.getUpdateProfileRequest().getUserGender().name()) ? command.getUpdateProfileRequest().getUserGender().name() : authEntity.getUserGender();
-                    newAuthEntity.setUserGender(newUserGender);
+                    newAuthEntity.setUserAge(command.getUpdateProfileRequest().getUserAge());
+                    newAuthEntity.setUserGender(command.getUpdateProfileRequest().getUserGender().name());
                     String newUserMail = StringUtils.isNotBlank(command.getUpdateProfileRequest().getUserMail()) ? command.getUpdateProfileRequest().getUserMail() : authEntity.getUserMail();
                     newAuthEntity.setUserMail(newUserMail);
                     String newUserPhoneNo = StringUtils.isNotBlank(command.getUpdateProfileRequest().getUserPhoneNo()) ? command.getUpdateProfileRequest().getUserPhoneNo() : authEntity.getUserPhoneNo();
@@ -101,6 +93,24 @@ public class AuthService {
         }
     }
 
+    public UpdatePasswordResponse updateUserPassword(UpdatePasswordCommand command) {
+        AuthEntity authEntity = authRepository.getByUserName(command.getUpdatePasswordRequest().getUserName());
+        if(authEntity != null){
+            assert false;
+            if(authEntity.getUserPassword().equals(command.getUpdatePasswordRequest().getUserPassword())){
+                AuthEntity newAuthEntity = new AuthEntity();
+                BeanUtils.copyProperties(authEntity,newAuthEntity);
+                newAuthEntity.setUserPassword(command.getUpdatePasswordRequest().getNewUserPassword());
+                authRepository.save(newAuthEntity);
+                return new UpdatePasswordResponse(newAuthEntity.getUserName());
+            } else{
+                throw new PasswordNotMatchingException();
+            }
+        }else{
+            throw new UserNotFoundException();
+        }
+    }
+
     public DeleteUserResponse deleteUser(DeleteUserCommand command) {
         AuthEntity authEntity = authRepository.getByUserName(command.getDeleteUserRequest().getUserName());
         if(authEntity != null){
@@ -115,6 +125,5 @@ public class AuthService {
             throw new UserNotFoundException();
         }
     }
-
 
 }

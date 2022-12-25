@@ -4,18 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import streamo.server.auth.bootstrap.enums.CountryCodeEnum;
-import streamo.server.auth.bootstrap.model.command.DeleteUserCommand;
-import streamo.server.auth.bootstrap.model.command.SignInCommand;
-import streamo.server.auth.bootstrap.model.command.SignUpCommand;
-import streamo.server.auth.bootstrap.model.command.UpdateProfileCommand;
-import streamo.server.auth.bootstrap.model.request.DeleteUserRequest;
-import streamo.server.auth.bootstrap.model.request.SignInRequest;
-import streamo.server.auth.bootstrap.model.request.SignupRequest;
-import streamo.server.auth.bootstrap.model.request.UpdateProfileRequest;
-import streamo.server.auth.bootstrap.model.response.DeleteUserResponse;
-import streamo.server.auth.bootstrap.model.response.SignInResponse;
-import streamo.server.auth.bootstrap.model.response.SignUpResponse;
-import streamo.server.auth.bootstrap.model.response.UpdateProfileResponse;
+import streamo.server.auth.bootstrap.model.command.*;
+import streamo.server.auth.bootstrap.model.request.*;
+import streamo.server.auth.bootstrap.model.response.*;
 import streamo.server.auth.bootstrap.service.AuthService;
 
 @Slf4j
@@ -44,13 +35,22 @@ public class AuthController {
         return authService.userSignIn(command);
     }
 
-    @PutMapping("/user/update")
+    @PutMapping("/user/update-profile")
     public UpdateProfileResponse updateProfile(@RequestBody UpdateProfileRequest updateProfileRequest, @RequestHeader CountryCodeEnum userCountry, @RequestHeader String uuid){
         UpdateProfileCommand command = new UpdateProfileCommand();
         command.setUpdateProfileRequest(updateProfileRequest);
         command.setUserCountry(userCountry);
         command.setUuid(uuid);
         return authService.updateUserProfile(command);
+    }
+
+    @PutMapping("/user/update-password")
+    public UpdatePasswordResponse updatePassword(@RequestBody UpdatePasswordRequest updatePasswordRequest, @RequestHeader CountryCodeEnum userCountry, @RequestHeader String uuid){
+        UpdatePasswordCommand command = new UpdatePasswordCommand();
+        command.setUpdatePasswordRequest(updatePasswordRequest);
+        command.setUserCountry(userCountry);
+        command.setUuid(uuid);
+        return authService.updateUserPassword(command);
     }
 
     @DeleteMapping("/user/delete")
