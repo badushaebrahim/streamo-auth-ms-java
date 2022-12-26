@@ -10,6 +10,7 @@ import streamo.server.auth.bootstrap.enums.CountryCodeEnum;
 import streamo.server.auth.bootstrap.model.command.*;
 import streamo.server.auth.bootstrap.model.request.*;
 import streamo.server.auth.bootstrap.model.response.*;
+import streamo.server.auth.bootstrap.repository.AuthRepository;
 import streamo.server.auth.bootstrap.service.AuthService;
 
 @Slf4j
@@ -19,6 +20,7 @@ public class AuthController {
 
     @Autowired
     AuthService authService;
+    AuthRepository authRepository;
 
     @ApiOperation(value = "Create profile for user")
     @PostMapping("/user/sign-up")
