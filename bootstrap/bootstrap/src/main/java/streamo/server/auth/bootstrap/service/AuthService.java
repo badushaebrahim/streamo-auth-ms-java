@@ -3,6 +3,7 @@ package streamo.server.auth.bootstrap.service;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import streamo.server.auth.bootstrap.exceptions.PasswordNotMatchingException;
 import streamo.server.auth.bootstrap.exceptions.UserNameAlreadyExistsException;
@@ -11,12 +12,15 @@ import streamo.server.auth.bootstrap.model.command.*;
 import streamo.server.auth.bootstrap.model.entity.AuthEntity;
 import streamo.server.auth.bootstrap.model.response.*;
 import streamo.server.auth.bootstrap.repository.AuthRepository;
+import streamo.server.auth.bootstrap.util.JwtTokenUtil;
+
 import java.time.LocalDateTime;
 
 @Slf4j
 @Service
 public class AuthService {
-
+    @Autowired
+    JwtTokenUtil util;
     private final AuthRepository authRepository;
 
     AuthService(AuthRepository authRepository){
@@ -48,7 +52,8 @@ public class AuthService {
       if(authEntity != null){
           assert false;
           if(authEntity.getUserPassword().equals(command.getSignInRequest().getUserPassword())){
-            return new SignInResponse(authEntity.getUserName());
+
+            return new SignInResponse(util.generateToken(authEntity));
         } else{
             throw new PasswordNotMatchingException();
         }
