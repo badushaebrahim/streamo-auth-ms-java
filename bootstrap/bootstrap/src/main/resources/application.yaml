@@ -26,3 +26,6 @@ app:
     contact-email: apisupportgroup@abc.com
     swagger:
       enable: true
+
+token:
+  secret: "badusha"
