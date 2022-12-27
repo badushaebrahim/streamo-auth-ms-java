@@ -9,6 +9,9 @@ public interface AuthRepository extends MongoRepository<AuthEntity, String> {
     //retrieve by username
     public AuthEntity getByUserName(String userName);
 
+    //retrieve by username and password
+    public AuthEntity getByUserNameAndUserPassword(String userName, String userPassword);
+
     //delete by username
     public void deleteByUserName(String userName);
 }
