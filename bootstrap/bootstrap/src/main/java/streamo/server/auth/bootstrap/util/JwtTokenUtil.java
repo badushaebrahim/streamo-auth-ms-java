@@ -29,7 +29,7 @@ public class JwtTokenUtil implements Serializable {
     public Map<String, String> generateToken(AuthEntity user) {
         String jwtToken="";
 //        jwtToken = Jwts.builder().setSubject(user.getUserName()).setIssuedAt(new Date()).signWith(SignatureAlgorithm.HS256, "secret").compact();
-        jwtToken =Jwts.builder().setSubject(user.getUserName()).setExpiration(new Date(System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(5))).setIssuedAt(new Date()).signWith(SignatureAlgorithm.HS256,"secret").compact();
+        jwtToken =Jwts.builder().setSubject(user.getId())).setExpiration(new Date(System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(5))).setIssuedAt(new Date()).signWith(SignatureAlgorithm.HS256,"secret").compact();
         Map<String, String> jwtTokenGen = new HashMap<>();
         jwtTokenGen.put("token", jwtToken);
         jwtTokenGen.put("message", message);
