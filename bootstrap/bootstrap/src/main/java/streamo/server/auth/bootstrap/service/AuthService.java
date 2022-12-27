@@ -15,6 +15,7 @@ import streamo.server.auth.bootstrap.repository.AuthRepository;
 import streamo.server.auth.bootstrap.util.JwtTokenUtil;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -47,13 +48,13 @@ public class AuthService {
     }
   }
 
-  public SignInResponse userSignIn(SignInCommand command) {
+  public Map<String, String> userSignIn(SignInCommand command) {
       AuthEntity authEntity = authRepository.getByUserName(command.getSignInRequest().getUserName());
       if(authEntity != null){
           assert false;
           if(authEntity.getUserPassword().equals(command.getSignInRequest().getUserPassword())){
 
-            return new SignInResponse(util.generateToken(authEntity));
+            return util.generateToken(authEntity);
         } else{
             throw new PasswordNotMatchingException();
         }
@@ -131,4 +132,9 @@ public class AuthService {
         }
     }
 
+
+    public Map<String,String> jwtcheck(String jwt){
+//        log.info("token is {}",);
+       return util.readToken(jwt);
+    }
 }
