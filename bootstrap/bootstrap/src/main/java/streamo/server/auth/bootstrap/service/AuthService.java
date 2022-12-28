@@ -57,7 +57,11 @@ public class AuthService {
           assert false;
           if(authEntity.getUserPassword().equals(command.getSignInRequest().getUserPassword())){
 
+<<<<<<< Updated upstream
             return util.generateToken(authEntity);
+=======
+            return new SignInResponse(util.generateToken(authEntity));
+>>>>>>> Stashed changes
         } else{
             throw new PasswordNotMatchingException();
         }
