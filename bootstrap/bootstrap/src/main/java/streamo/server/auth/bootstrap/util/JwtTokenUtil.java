@@ -24,7 +24,7 @@ public class JwtTokenUtil implements Serializable {
     jwtToken =
         Jwts.builder()
             .setSubject(authEntity.getId()).setIssuedAt(new Date())
-            .setExpiration(new Date(System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(30)))
+            .setExpiration(new Date(System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(2)))
             .signWith(SignatureAlgorithm.HS256, properties.getEncryptionKey())
             .compact();
         Map<String, String> jwtTokenGen = new HashMap<>();
@@ -40,8 +40,8 @@ public class JwtTokenUtil implements Serializable {
         log.info(" EXPIRATION-DATE : {}", expirationAt);
         final Date issuedAt = claims.getIssuedAt();
         log.info(" ISSUED-DATE : {}", issuedAt);
-        if(Boolean.TRUE.equals(expirationAt.after(issuedAt))){
-        return claims.getSubject();
+        if(Boolean.TRUE.equals(expirationAt.after(new Date()))){
+            return claims.getSubject();
         }
         else{
             throw new TokenExpiredException();
