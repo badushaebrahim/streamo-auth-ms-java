@@ -24,7 +24,7 @@ public class AuthController {
     AuthService authService;
     AuthRepository authRepository;
 
-    @ApiOperation(value = "Create profile for user")
+    @ApiOperation(value = "Create new profile")
     @PostMapping("/user/sign-up")
     public ResponseEntity<SignUpResponse> createProfile(@RequestBody SignupRequest signupRequest, @RequestHeader CountryCodeEnum userCountry, @RequestHeader String uuid){
         SignUpCommand command = new SignUpCommand();
@@ -46,8 +46,9 @@ public class AuthController {
 
     @ApiOperation(value = "Update user profile")
     @PutMapping("/user/update-profile")
-    public ResponseEntity<UpdateProfileResponse> updateProfile(@RequestBody UpdateProfileRequest updateProfileRequest, @RequestHeader CountryCodeEnum userCountry, @RequestHeader String uuid){
+    public ResponseEntity<UpdateProfileResponse> updateProfile(@RequestBody UpdateProfileRequest updateProfileRequest, @RequestHeader String userToken, @RequestHeader CountryCodeEnum userCountry, @RequestHeader String uuid){
         UpdateProfileCommand command = new UpdateProfileCommand();
+        command.setUserToken(userToken);
         command.setUpdateProfileRequest(updateProfileRequest);
         command.setUserCountry(userCountry);
         command.setUuid(uuid);
@@ -56,8 +57,9 @@ public class AuthController {
 
     @ApiOperation(value = "update user password")
     @PutMapping("/user/update-password")
-    public ResponseEntity<UpdatePasswordResponse> updatePassword(@RequestBody UpdatePasswordRequest updatePasswordRequest, @RequestHeader CountryCodeEnum userCountry, @RequestHeader String uuid){
+    public ResponseEntity<UpdatePasswordResponse> updatePassword(@RequestBody UpdatePasswordRequest updatePasswordRequest, @RequestHeader String userToken, @RequestHeader CountryCodeEnum userCountry, @RequestHeader String uuid){
         UpdatePasswordCommand command = new UpdatePasswordCommand();
+        command.setUserToken(userToken);
         command.setUpdatePasswordRequest(updatePasswordRequest);
         command.setUserCountry(userCountry);
         command.setUuid(uuid);

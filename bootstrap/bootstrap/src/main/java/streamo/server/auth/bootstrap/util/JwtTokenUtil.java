@@ -7,6 +7,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import streamo.server.auth.bootstrap.configurations.properties.CustomProperties;
+import streamo.server.auth.bootstrap.exceptions.TokenExpiredException;
 import streamo.server.auth.bootstrap.model.entity.AuthEntity;
 import java.io.Serializable;
 import java.util.Date;
@@ -18,11 +19,11 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class JwtTokenUtil implements Serializable {
     private String status = "token generated";
-    public Map<String, String> generateToken(AuthEntity user, CustomProperties properties) {
+    public Map<String, String> generateToken(AuthEntity authEntity, CustomProperties properties) {
         String jwtToken="";
     jwtToken =
         Jwts.builder()
-            .setSubject(user.getId()).setIssuedAt(new Date())
+            .setSubject(authEntity.getId()).setIssuedAt(new Date())
             .setExpiration(new Date(System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(30)))
             .signWith(SignatureAlgorithm.HS256, properties.getEncryptionKey())
             .compact();
@@ -32,22 +33,20 @@ public class JwtTokenUtil implements Serializable {
         return jwtTokenGen;
     }
 
-    public Map<String,String > readToken (String token){
-        Map<String,String > resp = new HashMap<>();
-        Date test = Jwts.parser().setSigningKey("secret").parseClaimsJws(token).getBody().getExpiration();
-        log.info(" hello {}" , test);
-        if(Boolean.TRUE.equals(isTokenExpired(token))){
-        Claims claims = Jwts.parser().setSigningKey("secret").parseClaimsJws(token).getBody();
-        log.info(claims.getSubject());
-        resp.put("test", claims.getSubject());
-
+    public String readToken (String token, CustomProperties properties){
+        Claims claims = Jwts.parser().setSigningKey(properties.getEncryptionKey()).parseClaimsJws(token).getBody();
+        log.info(" SUBJECT : {}" , claims.getSubject());
+        final Date expirationAt = claims.getExpiration();
+        log.info(" EXPIRATION-DATE : {}", expirationAt);
+        final Date issuedAt = claims.getIssuedAt();
+        log.info(" ISSUED-DATE : {}", issuedAt);
+        if(Boolean.TRUE.equals(expirationAt.after(issuedAt))){
+        return claims.getSubject();
         }
-        return  resp;
+        else{
+            throw new TokenExpiredException();
+        }
 
-    }
 
-    public Boolean isTokenExpired(String token) {
-        final Date expiration = Jwts.parser().setSigningKey("secret").parseClaimsJws(token).getBody().getExpiration();
-        return expiration.before(new Date());
     }
 }

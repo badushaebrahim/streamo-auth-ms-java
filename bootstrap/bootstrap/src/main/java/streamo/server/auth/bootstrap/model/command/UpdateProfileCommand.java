@@ -8,5 +8,6 @@ import java.security.PrivateKey;
 
 @Data
 public class UpdateProfileCommand extends CommonHeaders {
+    private String userToken;
     private UpdateProfileRequest updateProfileRequest;
 }

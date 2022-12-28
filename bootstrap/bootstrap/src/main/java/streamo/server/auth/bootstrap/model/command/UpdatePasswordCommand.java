@@ -6,5 +6,6 @@ import streamo.server.auth.bootstrap.model.request.UpdatePasswordRequest;
 
 @Data
 public class UpdatePasswordCommand extends CommonHeaders {
+    private String userToken;
     private UpdatePasswordRequest updatePasswordRequest;
 }

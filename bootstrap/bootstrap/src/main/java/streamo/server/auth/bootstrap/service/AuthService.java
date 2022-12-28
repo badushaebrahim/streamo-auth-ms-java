@@ -14,6 +14,7 @@ import streamo.server.auth.bootstrap.model.response.*;
 import streamo.server.auth.bootstrap.repository.AuthRepository;
 import streamo.server.auth.bootstrap.util.JwtTokenUtil;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -61,8 +62,10 @@ public class AuthService {
     }
 
   public UpdateProfileResponse updateUserProfile(UpdateProfileCommand command) {
-        AuthEntity authEntity = authRepository.getByUserNameAndUserPassword(command.getUpdateProfileRequest().getUserName(), command.getUpdateProfileRequest().getUserPassword());
-        if(authEntity != null){
+        String userId = util.readToken(command.getUserToken(), properties);
+        Optional<AuthEntity> tempAuthEntity = authRepository.findById(userId);
+        if(tempAuthEntity.isPresent()){
+            AuthEntity authEntity = tempAuthEntity.get();
             AuthEntity newAuthEntity = new AuthEntity();
             String newUsername = StringUtils.isNotBlank(command.getUpdateProfileRequest().getNewUsername()) ? command.getUpdateProfileRequest().getNewUsername() : authEntity.getUserName();
             if((authRepository.getByUserName(command.getUpdateProfileRequest().getNewUsername()) == null) || authEntity.getUserName().equals(newUsername)){
@@ -92,8 +95,10 @@ public class AuthService {
     }
 
     public UpdatePasswordResponse updateUserPassword(UpdatePasswordCommand command) {
-        AuthEntity authEntity = authRepository.getByUserNameAndUserPassword(command.getUpdatePasswordRequest().getUserName(), command.getUpdatePasswordRequest().getUserPassword());
-        if(authEntity != null){
+        String userId = util.readToken(command.getUserToken(), properties);
+        Optional<AuthEntity> tempAuthEntity = authRepository.findById(userId);
+        if(tempAuthEntity.isPresent() && (((tempAuthEntity.get()).getUserPassword()).equals(command.getUpdatePasswordRequest().getUserPassword()))){
+            AuthEntity authEntity = tempAuthEntity.get();
             AuthEntity newAuthEntity = new AuthEntity();
             BeanUtils.copyProperties(authEntity,newAuthEntity);
             newAuthEntity.setUserPassword(command.getUpdatePasswordRequest().getNewUserPassword());
