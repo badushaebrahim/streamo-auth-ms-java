@@ -27,5 +27,7 @@ app:
     swagger:
       enable: true
 
-token:
-  secret: "badusha"
+config:
+  rest:
+    services:
+      encryptionKey: "keycodevalue"

@@ -36,7 +36,7 @@ public class AuthController {
 
     @ApiOperation(value = "User Sign-in")
     @PostMapping("/user/sign-in")
-    public ResponseEntity<Map<String, String>> signIn(@RequestBody SignInRequest signInRequest, @RequestHeader CountryCodeEnum userCountry, @RequestHeader String uuid){
+    public ResponseEntity<SignInResponse> signIn(@RequestBody SignInRequest signInRequest, @RequestHeader CountryCodeEnum userCountry, @RequestHeader String uuid){
         SignInCommand command = new SignInCommand();
         command.setSignInRequest(signInRequest);
         command.setUserCountry(userCountry);
@@ -52,12 +52,6 @@ public class AuthController {
         command.setUserCountry(userCountry);
         command.setUuid(uuid);
         return new ResponseEntity<>(authService.updateUserProfile(command), HttpStatus.OK);
-    }
-    @ApiOperation(value = "Update user profile")
-    @PutMapping("/jwt")
-    public ResponseEntity<Map<String,String>> updateProfile(@RequestHeader("jwt") String  jwt){
-
-        return new ResponseEntity<>(authService.jwtcheck(jwt), HttpStatus.OK);
     }
 
     @ApiOperation(value = "update user password")

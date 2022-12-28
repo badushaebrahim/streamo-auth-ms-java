@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import streamo.server.auth.bootstrap.configurations.properties.CustomProperties;
 import streamo.server.auth.bootstrap.exceptions.UserNameAlreadyExistsException;
 import streamo.server.auth.bootstrap.exceptions.UserNotFoundException;
 import streamo.server.auth.bootstrap.model.command.*;
@@ -12,15 +13,16 @@ import streamo.server.auth.bootstrap.model.entity.AuthEntity;
 import streamo.server.auth.bootstrap.model.response.*;
 import streamo.server.auth.bootstrap.repository.AuthRepository;
 import streamo.server.auth.bootstrap.util.JwtTokenUtil;
-
 import java.time.LocalDateTime;
-import java.util.Map;
 
 @Slf4j
 @Service
 public class AuthService {
     @Autowired
     JwtTokenUtil util;
+    @Autowired
+    CustomProperties properties;
+
     private final AuthRepository authRepository;
 
     AuthService(AuthRepository authRepository){
@@ -47,29 +49,16 @@ public class AuthService {
     }
   }
 
-
-  public Map<String, String> userSignIn(SignInCommand command) {
-      AuthEntity authEntity = authRepository.getByUserName(command.getSignInRequest().getUserName());
-
-      if(authEntity != null){
-
-
-          assert false;
-          if(authEntity.getUserPassword().equals(command.getSignInRequest().getUserPassword())){
-
-<<<<<<< Updated upstream
-            return util.generateToken(authEntity);
-=======
-            return new SignInResponse(util.generateToken(authEntity));
->>>>>>> Stashed changes
-        } else{
-            throw new PasswordNotMatchingException();
-        }
-
-      }else{
-          throw new UserNotFoundException();
-      }
-  }
+  public SignInResponse userSignIn(SignInCommand command) {
+    AuthEntity authEntity =
+        authRepository.getByUserNameAndUserPassword(
+            command.getSignInRequest().getUserName(), command.getSignInRequest().getUserPassword());
+    if (authEntity != null) {
+      return new SignInResponse(util.generateToken(authEntity, properties));
+    } else {
+      throw new UserNotFoundException();
+    }
+    }
 
   public UpdateProfileResponse updateUserProfile(UpdateProfileCommand command) {
         AuthEntity authEntity = authRepository.getByUserNameAndUserPassword(command.getUpdateProfileRequest().getUserName(), command.getUpdateProfileRequest().getUserPassword());
@@ -123,13 +112,6 @@ public class AuthService {
         }else{
             throw new UserNotFoundException();
         }
-    }
-
-
-
-    public Map<String,String> jwtcheck(String jwt){
-//        log.info("token is {}",);
-       return util.readToken(jwt);
     }
 
 }
