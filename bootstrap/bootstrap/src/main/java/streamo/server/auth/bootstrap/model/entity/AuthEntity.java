@@ -15,6 +15,7 @@ public class AuthEntity {
     @Id
     private String id;
     private String userName;
+    private String name;
     private Integer userAge;
     private String userGender;
     private String userMail;

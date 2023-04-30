@@ -36,9 +36,8 @@ public class AuthService {
       AuthEntity newAuthEntity = new AuthEntity();
       BeanUtils.copyProperties(command.getSignupRequest(), newAuthEntity);
       newAuthEntity.setUserCountry(command.getUserCountry().name());
-      newAuthEntity.setUserGender(command.getSignupRequest().getUserGender().name());
       newAuthEntity.setUuid(command.getUuid());
-      newAuthEntity.setCreatedBy(command.getSignupRequest().getUserName());
+      newAuthEntity.setCreatedBy(command.getSignupRequest().getName());
       newAuthEntity.setCreatedTime(LocalDateTime.now());
       newAuthEntity.setLastUpdatedBy(command.getSignupRequest().getUserName());
       newAuthEntity.setLastUpdatedTime(LocalDateTime.now());

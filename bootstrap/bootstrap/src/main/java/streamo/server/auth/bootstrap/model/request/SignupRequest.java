@@ -10,6 +10,7 @@ import streamo.server.auth.bootstrap.enums.GenderEnum;
 @NoArgsConstructor
 public class SignupRequest {
     private String userName ;
+    private String name;
     private Integer userAge;
     private GenderEnum userGender;
     private String userMail;
