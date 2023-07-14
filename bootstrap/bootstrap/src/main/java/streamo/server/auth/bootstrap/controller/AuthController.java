@@ -13,8 +13,6 @@ import streamo.server.auth.bootstrap.model.response.*;
 import streamo.server.auth.bootstrap.repository.AuthRepository;
 import streamo.server.auth.bootstrap.service.AuthService;
 
-import java.util.Map;
-
 @Slf4j
 @RestController
 @RequestMapping("/auth")
@@ -23,7 +21,6 @@ public class AuthController {
 
     @Autowired
     AuthService authService;
-    AuthRepository authRepository;
 
     @ApiOperation(value = "Create new profile")
     @PostMapping("/user/sign-up")

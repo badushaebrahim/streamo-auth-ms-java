@@ -10,10 +10,10 @@ spring:
 
   data:
     mongodb:
-      user: admin
-      password: admin
+#       user: badusha
+#       password: admin
       database: authorization
-      uri: mongodb://localhost:27017
+      uri: mongodb+srv://use:use@cluster0.lmat7tv.mongodb.net/?retryWrites=true&w=majority
 
 app:
   name: spring boot application
