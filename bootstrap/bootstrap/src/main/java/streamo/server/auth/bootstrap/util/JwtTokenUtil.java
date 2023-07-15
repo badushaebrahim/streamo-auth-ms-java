@@ -29,7 +29,7 @@ public class JwtTokenUtil implements Serializable {
             .signWith(SignatureAlgorithm.HS256, properties.getEncryptionKey())
             .compact();
         Map<String, String> jwtTokenGen = new HashMap<>();
-        jwtTokenGen.put("jwt-token", jwtToken);
+        jwtTokenGen.put("jwttoken", jwtToken);
         jwtTokenGen.put("status", STATUS);
         return jwtTokenGen;
     }
